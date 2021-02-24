@@ -1,5 +1,5 @@
 -- MySQL Workbench Synchronization
--- Generated: 2021-02-18 17:24
+-- Generated: 2021-02-24 16:22
 -- Model: New Model
 -- Version: 1.0
 -- Project: Name of the project
@@ -45,60 +45,20 @@ COLLATE = utf8_bin;
 
 CREATE TABLE IF NOT EXISTS `ampolla`.`Gafas` (
   `idGafas` INT(11) NOT NULL AUTO_INCREMENT,
-  `Marca` VARCHAR(45) NULL DEFAULT NULL,
-  `graduacion` VARCHAR(20) NULL DEFAULT NULL,
   `Montura` ENUM('Pasta', 'Metalica') NULL DEFAULT NULL,
-  `Color` VARCHAR(45) NULL DEFAULT NULL,
   `precio` INT(11) NULL DEFAULT NULL,
-  PRIMARY KEY (`idGafas`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_bin;
-
-CREATE TABLE IF NOT EXISTS `ampolla`.`Gafas_has_Provedor` (
-  `Gafas_idGafas` INT(11) NOT NULL,
-  `Provedor_idProvedor` INT(11) NOT NULL,
-  PRIMARY KEY (`Gafas_idGafas`, `Provedor_idProvedor`),
-  INDEX `fk_Gafas_has_Provedor_Provedor1_idx` (`Provedor_idProvedor` ASC),
-  INDEX `fk_Gafas_has_Provedor_Gafas1_idx` (`Gafas_idGafas` ASC),
-  CONSTRAINT `fk_Gafas_has_Provedor_Gafas1`
-    FOREIGN KEY (`Gafas_idGafas`)
-    REFERENCES `ampolla`.`Gafas` (`idGafas`),
-  CONSTRAINT `fk_Gafas_has_Provedor_Provedor1`
-    FOREIGN KEY (`Provedor_idProvedor`)
-    REFERENCES `ampolla`.`Provedor` (`idProvedor`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_bin;
-
-CREATE TABLE IF NOT EXISTS `ampolla`.`Gafas_has_Provedor1` (
-  `Gafas_idGafas` INT(11) NOT NULL,
-  `Provedor_idProvedor` INT(11) NOT NULL,
-  PRIMARY KEY (`Gafas_idGafas`, `Provedor_idProvedor`),
-  INDEX `fk_Gafas_has_Provedor1_Provedor1_idx` (`Provedor_idProvedor` ASC),
-  INDEX `fk_Gafas_has_Provedor1_Gafas1_idx` (`Gafas_idGafas` ASC),
-  CONSTRAINT `fk_Gafas_has_Provedor1_Gafas1`
-    FOREIGN KEY (`Gafas_idGafas`)
-    REFERENCES `ampolla`.`Gafas` (`idGafas`),
-  CONSTRAINT `fk_Gafas_has_Provedor1_Provedor1`
-    FOREIGN KEY (`Provedor_idProvedor`)
-    REFERENCES `ampolla`.`Provedor` (`idProvedor`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_bin;
-
-CREATE TABLE IF NOT EXISTS `ampolla`.`Gafas_has_Vendedor` (
-  `Gafas_idGafas` INT(11) NOT NULL,
-  `Vendedor_idVendedor` INT(11) NOT NULL,
-  PRIMARY KEY (`Gafas_idGafas`, `Vendedor_idVendedor`),
-  INDEX `fk_Gafas_has_Vendedor_Vendedor1_idx` (`Vendedor_idVendedor` ASC),
-  INDEX `fk_Gafas_has_Vendedor_Gafas1_idx` (`Gafas_idGafas` ASC),
-  CONSTRAINT `fk_Gafas_has_Vendedor_Gafas1`
-    FOREIGN KEY (`Gafas_idGafas`)
-    REFERENCES `ampolla`.`Gafas` (`idGafas`),
-  CONSTRAINT `fk_Gafas_has_Vendedor_Vendedor1`
-    FOREIGN KEY (`Vendedor_idVendedor`)
-    REFERENCES `ampolla`.`Vendedor` (`idVendedor`))
+  `colorIzq` VARCHAR(45) NULL DEFAULT NULL,
+  `colorDer` VARCHAR(45) NULL DEFAULT NULL,
+  `gradIzq` VARCHAR(45) NULL DEFAULT NULL,
+  `gradDer` VARCHAR(45) NULL DEFAULT NULL,
+  `Marcas_idMarcas` INT(11) NOT NULL,
+  PRIMARY KEY (`idGafas`, `Marcas_idMarcas`),
+  INDEX `fk_Gafas_Marcas1_idx` (`Marcas_idMarcas` ASC),
+  CONSTRAINT `fk_Gafas_Marcas1`
+    FOREIGN KEY (`Marcas_idMarcas`)
+    REFERENCES `ampolla`.`Marcas` (`idMarcas`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_bin;
@@ -106,17 +66,15 @@ COLLATE = utf8_bin;
 CREATE TABLE IF NOT EXISTS `ampolla`.`Gafas_has_Venta` (
   `Gafas_idGafas` INT(11) NOT NULL,
   `Venta_idVenta` INT(11) NOT NULL,
-  `Venta_Cliente_idCliente` INT(11) NOT NULL,
-  `Venta_Vendedor_idVendedor` INT(11) NOT NULL,
-  PRIMARY KEY (`Gafas_idGafas`, `Venta_idVenta`, `Venta_Cliente_idCliente`, `Venta_Vendedor_idVendedor`),
-  INDEX `fk_Gafas_has_Venta_Venta1_idx` (`Venta_idVenta` ASC, `Venta_Cliente_idCliente` ASC, `Venta_Vendedor_idVendedor` ASC),
+  PRIMARY KEY (`Gafas_idGafas`, `Venta_idVenta`),
+  INDEX `fk_Gafas_has_Venta_Venta1_idx` (`Venta_idVenta` ASC),
   INDEX `fk_Gafas_has_Venta_Gafas1_idx` (`Gafas_idGafas` ASC),
   CONSTRAINT `fk_Gafas_has_Venta_Gafas1`
     FOREIGN KEY (`Gafas_idGafas`)
     REFERENCES `ampolla`.`Gafas` (`idGafas`),
   CONSTRAINT `fk_Gafas_has_Venta_Venta1`
-    FOREIGN KEY (`Venta_idVenta` , `Venta_Cliente_idCliente` , `Venta_Vendedor_idVendedor`)
-    REFERENCES `ampolla`.`Venta` (`idVenta` , `Cliente_idCliente` , `Vendedor_idVendedor`))
+    FOREIGN KEY (`Venta_idVenta`)
+    REFERENCES `ampolla`.`Venta` (`idVenta`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_bin;
@@ -132,7 +90,9 @@ CREATE TABLE IF NOT EXISTS `ampolla`.`Provedor` (
   INDEX `fk_Provedor_DireccionProv1_idx` (`DireccionProv_idDireccionProvedor` ASC),
   CONSTRAINT `fk_Provedor_DireccionProv1`
     FOREIGN KEY (`DireccionProv_idDireccionProvedor`)
-    REFERENCES `ampolla`.`DireccionProv` (`idDireccionProvedor`))
+    REFERENCES `ampolla`.`DireccionProv` (`idDireccionProvedor`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_bin;
@@ -146,9 +106,10 @@ DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_bin;
 
 CREATE TABLE IF NOT EXISTS `ampolla`.`Venta` (
-  `idVenta` INT(11) NOT NULL,
+  `idVenta` INT(11) NOT NULL AUTO_INCREMENT,
   `Cliente_idCliente` INT(11) NOT NULL,
   `Vendedor_idVendedor` INT(11) NOT NULL,
+  `Total` FLOAT(11) NULL DEFAULT NULL,
   PRIMARY KEY (`idVenta`, `Cliente_idCliente`, `Vendedor_idVendedor`),
   INDEX `fk_Venta_Cliente1_idx` (`Cliente_idCliente` ASC),
   INDEX `fk_Venta_Vendedor1_idx` (`Vendedor_idVendedor` ASC),
@@ -158,6 +119,21 @@ CREATE TABLE IF NOT EXISTS `ampolla`.`Venta` (
   CONSTRAINT `fk_Venta_Vendedor1`
     FOREIGN KEY (`Vendedor_idVendedor`)
     REFERENCES `ampolla`.`Vendedor` (`idVendedor`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_bin;
+
+CREATE TABLE IF NOT EXISTS `ampolla`.`Marcas` (
+  `idMarcas` INT(11) NOT NULL,
+  `Nombre` VARCHAR(45) NULL DEFAULT NULL,
+  `Provedor_idProvedor` INT(11) NOT NULL,
+  PRIMARY KEY (`idMarcas`, `Provedor_idProvedor`),
+  INDEX `fk_Marcas_Provedor1_idx` (`Provedor_idProvedor` ASC),
+  CONSTRAINT `fk_Marcas_Provedor1`
+    FOREIGN KEY (`Provedor_idProvedor`)
+    REFERENCES `ampolla`.`Provedor` (`idProvedor`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_bin;
